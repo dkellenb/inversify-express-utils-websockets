@@ -27,12 +27,11 @@ server.setConfig((app) => {
 
 // server.build() actually returns an Express.Application instance
 let app = server.build();
-app.listen(3000);
-console.log('Server started on port 3000 :)');
 
 // socket.io expects an http.Server versus a InversifyExpressServer
 // see http://socket.io/docs/#using-with-express-3/4
 let httpServer = require('http').createServer(app);
+httpServer.listen(3000);
 let io = socketIo(httpServer);
 io.on('connection', (client) => {
   console.log('Client connection opened');
@@ -42,3 +41,5 @@ io.on('connection', (client) => {
   client.on('disconnect', (event) => console.log('Client has disconnected'));
 
 });
+
+console.log('Server started on port 3000 :)');
