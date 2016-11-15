@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { interfaces, Controller, InversifyExpressServer, TYPE } from 'inversify-express-utils';
+import { interfaces, InversifyExpressServer, TYPE } from 'inversify-express-utils';
 import { Kernel } from 'inversify';
 import * as bodyParser from 'body-parser';
 import TYPES from './constant/types';
@@ -7,7 +7,7 @@ import TAGS from './constant/tags';
 import { HomeController } from './controller/home';
 import { UserController } from './controller/user';
 import { UserService } from './service/user';
-import * as socketIo from 'socket.io';
+import * as SocketIO from 'socket.io';
 
 // load everything needed to the kernel
 let kernel = new Kernel();
@@ -28,12 +28,13 @@ server.setConfig((app) => {
 // server.build() actually returns an Express.Application instance
 let app = server.build();
 
-// socket.io expects an http.Server versus a InversifyExpressServer
+// socket.socketIO expects an http.Server versus a InversifyExpressServer
 // see http://socket.io/docs/#using-with-express-3/4
-let httpServer = require('http').createServer(app);
-httpServer.listen(3000);
-let io = socketIo(httpServer);
-io.on('connection', (client) => {
+let serverInstance = app.listen(3000);
+
+// create socket.socketIO
+let socketIO = SocketIO(serverInstance);
+socketIO.on('connection', (client) => {
   console.log('Client connection opened');
 
   // Success!  Now listen to messages to be received
